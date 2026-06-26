@@ -19,5 +19,3 @@ class PostAdmin(admin.ModelAdmin):
     
     show_facets = admin.ShowFacets.ALWAYS
     
-
-#admin.site.register(Post)
