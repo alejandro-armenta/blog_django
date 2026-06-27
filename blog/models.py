@@ -11,8 +11,6 @@ class PublishedManager(models.Manager):
         )
         
     
-
-
 class Post(models.Model):
     #ID default auto field
     
