@@ -45,5 +45,15 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+    # esta madre te regresa el path que el ruteador va a leer por
     def get_absolute_url(self):
-        return reverse("blog:post_detail", args=[self.id])
+
+        return reverse(
+            "blog:post_detail",
+            args=[
+                self.publish.year,
+                self.publish.month,
+                self.publish.day,
+                self.slug,
+            ],
+        )
