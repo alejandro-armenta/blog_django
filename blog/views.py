@@ -104,7 +104,7 @@ def post_detail(request, year, month, day, post):
     post_tags_ids = post.tags.values_list("id", flat=True)
 
     similar_posts = Post.published.filter(
-        tags__in=[post_tags_ids],
+        tags__in=post_tags_ids,
     ).exclude(id=post.id)
 
     # esto es despues del group by
