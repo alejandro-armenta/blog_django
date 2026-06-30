@@ -8,6 +8,8 @@ from django.views.decorators.http import require_POST
 from .models import Post
 from .forms import EmailPostForm, CommentForm
 
+from taggit.models import Tag
+
 
 @require_POST
 def post_comment(request, post_id):
@@ -21,7 +23,7 @@ def post_comment(request, post_id):
     form = CommentForm(data=request.POST)
 
     comment = None
-    
+
     if form.is_valid():
         comment = form.save(commit=False)
 
@@ -113,12 +115,22 @@ class PostListView(ListView):
     template_name = "blog/post/list.html"
 
 
-def post_list(request):
+def post_list(request, tag_slug=None):
 
     post_list = Post.published.all()
 
-    paginator = Paginator(post_list, 3)
+    tag=None
+    
+    if tag_slug:
 
+        tag = get_object_or_404(
+            Tag,
+            slug=tag_slug,
+        )
+
+        post_list = post_list.filter(tags__in=[tag])
+
+    paginator = Paginator(post_list, 3)
     number = request.GET.get("page", 1)
 
     try:
@@ -130,4 +142,4 @@ def post_list(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
-    return render(request, "blog/post/list.html", {"posts": posts})
+    return render(request, "blog/post/list.html", {"posts": posts, "tag": tag})
