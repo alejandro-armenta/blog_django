@@ -20,6 +20,8 @@ def post_comment(request, post_id):
 
     form = CommentForm(data=request.POST)
 
+    comment = None
+    
     if form.is_valid():
         comment = form.save(commit=False)
 
@@ -92,7 +94,15 @@ def post_detail(request, year, month, day, post):
         slug=post,
     )
 
-    return render(request, "blog/post/detail.html", {"post": post})
+    comments = post.comments.filter(active=True)
+
+    form = CommentForm()
+
+    return render(
+        request,
+        "blog/post/detail.html",
+        {"post": post, "comments": comments, "form": form},
+    )
 
 
 class PostListView(ListView):
